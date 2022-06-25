@@ -6,6 +6,7 @@ Selling merchandise in the modern era requires digital solutions. For this proje
 
 ![Store gif](http://g.recordit.co/lq05156Bj0.gif)
 ![Store gif 2](http://g.recordit.co/jcJpj4jrzz.gif)
+![Store gif 3(http://g.recordit.co/8XLlijwhby.gif)
 
 ### Application Features
 
