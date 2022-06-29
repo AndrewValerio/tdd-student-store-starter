@@ -20,6 +20,9 @@ export default function App() {
   const [shoppingCart, setShoppingCart] = React.useState([]);
   const [checkoutForm, submitCheckoutForm] = React.useState({email: "", name: ""});
   var [quantity, setQuantity] = React.useState(0);
+  const[email, setEmail] = React.useState("");
+  const [receipt, setReceipt] = React.useState(false);
+  const [success, setSuccess] = useState(false);
   useEffect(() => {
     // Update the document title using the browser API
 
@@ -32,7 +35,6 @@ export default function App() {
         console.log(products)
         //console.log(startingProducts.data.products)
       } catch (error) {
-        console.log(error)
         setError(error)
       }
       finally{
@@ -92,21 +94,34 @@ export default function App() {
         })
       }
     }
-  const handleOnCheckoutFormChange = (name, value) => {
-    submitCheckoutForm({...checkoutForm, [name]: value});
-  }
-  const handleOnSubmitCheckoutForm = () => {
-    axios.post("https://codepath-store-api.herokuapp.com/store",{
-      //axios.post("http://localhost:3001/store",{
-      user:{name: checkoutForm.name, email: checkoutForm.value}, shoppingCart
-    })
-    .then(function(response){
-      console.log(response);
-    })
-    .catch(function(error){
-      console.log(error);
-    })
-  }
+    function handleOnCheckoutFormChange(change) {
+      const { name, value} = change.target
+      submitCheckoutForm((prevForm) => ({
+        ...prevForm,
+        [name]: value
+      }))
+    }
+
+    // const getData = async () => {
+    //   let response = await axios.get("http://localhost:3001/store/");
+    //   setProducts(response.data.products);
+    //   setisFetching(false);
+    // };
+    function handleOnSubmitCheckoutForm() {
+      //backend
+      axios.post("http://localhost:3001/store", 
+      {user: checkoutForm, shoppingCart: shoppingCart})
+      .then(function(response) {
+        setReceipt(true);
+        setShoppingCart([]);
+        submitCheckoutForm({email: "", name: ""});
+        setSuccess(true);
+        setError();
+      }).catch(function(error) {
+        setError(error.message);
+        console.log(error);
+      })
+    }
 
   return (
     <div className="app">
@@ -126,6 +141,8 @@ export default function App() {
                    shoppingCart={shoppingCart} setShoppingCart={setShoppingCart}
                     checkoutForm={checkoutForm} submitCheckoutForm={submitCheckoutForm}
                     handleOnCheckoutFormChange={handleOnCheckoutFormChange}
+                    receipt={receipt} error={error} handleOnSubmitCheckoutForm={handleOnSubmitCheckoutForm}
+                    setEmail={setEmail} setIsOpen={setIsOpen} success={success}
                    />
                 </>
               )}   
@@ -142,6 +159,9 @@ export default function App() {
                    shoppingCart={shoppingCart} setShoppingCart={setShoppingCart}
                    checkoutForm={checkoutForm} submitCheckoutForm={submitCheckoutForm}
                    handleOnCheckoutFormChange={handleOnCheckoutFormChange}
+                   receipt={receipt} error={error}
+                   handleOnSubmitCheckoutForm={handleOnSubmitCheckoutForm}
+                   setEmail={setEmail} success={success}
                   />
                 </>
               )}   
